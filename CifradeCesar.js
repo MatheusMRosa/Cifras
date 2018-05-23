@@ -48,7 +48,7 @@ const type2 = () => {
         if (count === 1) {
             console.log(`Received: ${input}`);
             textEncrypted = input;
-            console.log('Agora uma chave: ')
+            console.log('Agora a chave: ')
         } else {
             key = input;
             console.log("Texto decriptado: ", decrypt(textEncrypted, key));
@@ -87,7 +87,7 @@ const decrypt = (encrypted, key) => {
         if (encrypted[i] !== ' ') {
             for (let j = 0; j < letters.length ; j++) {
                 if (encrypted[i] === letters[j]) {
-                    textOrigin[i] = letters[(j - key) % letters.length]; // chose the letter for a letter of alphabet key any less my position, and mod size total, because the letter can to exceed a letters of alphabet
+                    textOrigin[i] = letters[((j - key) + letters.length) % letters.length]; // chose the letter for a letter of alphabet key any less my position, and mod size total, because the letter can to exceed a letters of alphabet
                     break;
                 }
             }
