@@ -97,21 +97,6 @@ const encrypt = (texto, key) => {
             case ' ':
                 encrypted += texto[i];
                 break;
-            case ',':
-                encrypted += texto[i];
-                break;
-            case '.':
-                encrypted += texto[i];
-                break;
-            case '!':
-                encrypted += texto[i];
-                break;
-            case '?':
-                encrypted += texto[i];
-                break;
-            case '"':
-                encrypted += texto[i];
-                break;
             default:
                 encrypted += encryptLetter(texto[i], position(key[i]));
         }
@@ -134,21 +119,6 @@ const decrypt = (textEncrypted, key) => {
     for(let i = 0; i < textEncrypted.length; i+=1){
         switch(textEncrypted[i]){
             case ' ':
-                decrypted += textEncrypted[i];
-                break;
-            case ',':
-                decrypted += textEncrypted[i];
-                break;
-            case '.':
-                decrypted += textEncrypted[i];
-                break;
-            case '!':
-                decrypted += textEncrypted[i];
-                break;
-            case '?':
-                decrypted += textEncrypted[i];
-                break;
-            case '"':
                 decrypted += textEncrypted[i];
                 break;
             default:
