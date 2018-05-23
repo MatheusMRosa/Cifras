@@ -14,6 +14,7 @@ rl.question('1 - Encrypt the text, 2 - Decrypt the text', (answer) => {
         type2()
     } else {
         rl.close();
+        process.exit(0);
     }
 });
 
@@ -33,6 +34,7 @@ const type1 = () => {
             key = input;
             console.log("Texto encriptado: ", encrypt(textOrigin, key));
             rl.close();
+            process.exit(0);
         }
 
     });
@@ -53,6 +55,7 @@ const type2 = () => {
             key = input;
             console.log("Texto decriptado: ", decrypt(textEncrypted, key));
             rl.close();
+            process.exit(0);
         }
 
     });
