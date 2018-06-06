@@ -1,59 +1,43 @@
 const readLine = require('readline');
 
-const letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+let typeOfFunction = 0;
 
-const rl = readLine.createInterface({
+const rl = readLine.createInterface({ // lib native of javascript for catch a input of keyboard
     input: process.stdin,
     output: process.stdout
 });
 
-rl.question('1 - Encrypt the text, 2 - Decrypt the text', (answer) => {
-    if (answer === '1'){
-        type1()
-    } else if (answer === '2'){
-        type2()
+rl.question('1 - Encrypt the text, 2 - Decrypt the text', (answer) => { // function of 'readline' for question the user
+    if (answer === '1') {
+        typeOfFunction = 1;
+        run()
+    } else if (answer === '2') {
+        typeOfFunction = 2;
+        run()
     } else {
         rl.close();
         process.exit(0);
     }
 });
 
-
-const type1 = () => {
+const run = () => {
     let count = 0;
-    let textOrigin = '';
+    let text = '';
     let key = '';
-    console.log("Digite um texto Claro: ");
+    console.log("Digite um texto: ");
     rl.on('line', (input) => {
         count++;
         if (count === 1) {
-            console.log(`Received: ${input}`);
-            textOrigin = input;
+            text = input;
             console.log('Agora uma chave: ')
         } else {
             key = input;
-            console.log("Texto encriptado: ", encrypt(textOrigin, key));
-            rl.close();
-            process.exit(0);
-        }
-
-    });
-};
-
-const type2 = () => {
-    let count = 0;
-    let textEncrypted = '';
-    let key = '';
-    console.log("Digite um texto Encriptado: ");
-    rl.on('line', (input) => {
-        count++;
-        if (count === 1) {
-            console.log(`Received: ${input}`);
-            textEncrypted = input;
-            console.log('Agora a chave: ')
-        } else {
-            key = input;
-            console.log("Texto decriptado: ", decrypt(textEncrypted, key));
+            if (typeOfFunction === 1) {
+                console.log("Texto encriptado: ", encrypt(text, key));
+            } else {
+                console.log("Texto decriptado: ", decrypt(text, key));
+            }
             rl.close();
             process.exit(0);
         }
@@ -68,29 +52,29 @@ const encrypt = (text, key) => {
 
     for (let i = 0; i < text.length; i++) {// walk in array of the text passed for my function
         if (text[i] !== ' ') {//only validate if my text is empty in someone place
-            for (let j = 0; j < letters.length; j++) {// walk in the array of the alphabet
-                if (text[i] === letters[j]) {// found a letter in the alphabet
-                    encrypted[i] = letters[(j + key) % letters.length]; // chose the letter for a letter of alphabet key more my position, and mod size total, because the letter can to exceed a letters of alphabet
+            for (let j = 0; j < alphabet.length; j++) {// walk in the array of the alphabet
+                if (text[i] === alphabet[j]) {// found a letter in the alphabet
+                    encrypted[i] = alphabet[(j + key) % alphabet.length]; // chose the letter for a letter of alphabet key more my position, and mod size total, because the letter can to exceed a alphabet of alphabet
                     break;
                 }
             }
         } else {
-            encrypted[i] = ' ';
+            encrypted[i] = ' ';// case have in the text one space in this line retreat of the logical of encrypt
         }
     }
 
     return encrypted.join("");
 };
 
-const decrypt = (encrypted, key) => {
+const decrypt = (encrypted, key) => { // the logical is very like so function encrypt, the difference is the position in the array is decreased
     key = parseInt(key);
     let textOrigin = [];
 
     for (let i = 0; i < encrypted.length; i++) {
         if (encrypted[i] !== ' ') {
-            for (let j = 0; j < letters.length ; j++) {
-                if (encrypted[i] === letters[j]) {
-                    textOrigin[i] = letters[((j - key) + letters.length) % letters.length]; // chose the letter for a letter of alphabet key any less my position, and mod size total, because the letter can to exceed a letters of alphabet
+            for (let j = 0; j < alphabet.length; j++) {
+                if (encrypted[i] === alphabet[j]) {
+                    textOrigin[i] = alphabet[((j - key) + alphabet.length) % alphabet.length]; // chose the letter for a letter of alphabet key any less my position, and mod size total, because the letter can to exceed a alphabet of alphabet
                     break;
                 }
             }
