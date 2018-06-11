@@ -1,42 +1,43 @@
 const readLine = require('readline');
 
-const letters = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
+const alphabet = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"];
 
-const rl = readLine.createInterface({
+const rl = readLine.createInterface({ // lib native of javascript for catch a input of keyboard
     input: process.stdin,
     output: process.stdout
 });
 
-rl.question('1 - Encrypt the text, 2 - Decrypt the text', (answer) => {
-    if (answer === '1'){
-        type1()
-    } else if (answer === '2'){
-        type2()
+rl.question('1 - Encrypt the text, 2 - Decrypt the text', (answer) => { // function of 'readline' for question the user
+    if (answer === '1' || answer === '2') {
+        run(answer)
     } else {
         rl.close();
         process.exit(0);
     }
 });
 
-
-const type1 = () => {
-    let count = 0;
-    let textOrigin = '';
+const run = (typeOfFunction) => {// function receives the type of function (encrypt or decrypt)
+    let count = 0; // in this section start the variables only for initialize
+    let text = '';
     let key = '';
-    console.log("Digite um texto Claro: ");
-    rl.on('line', (input) => {
-        count++;
+
+    console.log("Digite um texto: ");
+
+    rl.on('line', (input) => { // this function read each line
+        count++; // need count only for know what the first line
         if (count === 1) {
-            console.log(`Received: ${input}`);
-            textOrigin = input;
+            text = input; // save the input of keyboard
+
             console.log('Agora uma chave: ')
+
         } else {
-            key = input;
+            key = input; // save the key in other variable
             let newKey = '';
-            while(newKey.length < textOrigin.length){
+            while (newKey.length < text.length) { // in this while only in case of my key is less that my text add in end of new key the key again
                 newKey += key;
             }
-            console.log("Texto encriptado: ", encrypt(textOrigin, newKey));
+            console.log("Texto modificado: ", cipher(text, newKey, typeOfFunction));
+
             rl.close();
             process.exit(0);
         }
@@ -44,87 +45,71 @@ const type1 = () => {
     });
 };
 
-const type2 = () => {
-    let count = 0;
-    let textEncrypted = '';
-    let key = '';
-    console.log("Digite um texto Encriptado: ");
-    rl.on('line', (input) => {
-        count++;
-        if (count === 1) {
-            console.log(`Received: ${input}`);
-            textEncrypted = input;
-            console.log('Agora a chave: ')
-        } else {
-            key = input;
-            let newKey = '';
-            while(newKey.length < textEncrypted.length){
-                newKey += key;
-            }
-            console.log("Texto decriptado: ", decrypt(textEncrypted, newKey));
-            rl.close();
-            process.exit(0);
-        }
+const cipher = (text, key, type) => { // this function receive the text and key and type of function to execute
+    let newWord = '';// initialize the variable void
+    type = parseInt(type); // need this only because the type is a text not number
 
-    });
-};
-
-const encryptLetter = (letter, key) => {
-    for(let i = 0; i < letter.length; i++){
-        for(let j = 0; j < letters.length; j++){
-            if(letters[j] === letter[i]){
-                return letters[(j + key)% letters.length];
-            }
-        }
-    }
-};
-
-const decryptLetter = (letter, key) => {
-    for(let i = 0; i < letter.length; i++){
-        for(let j = 0; j < letters.length; j += 1){
-            if(letter[i] === letters[j]){
-                return letters[((j - key)+ letters.length)% letters.length];
-            }
-        }
-    }
-};
-
-const encrypt = (texto, key) => {
-    let encrypted = '';
-
-    for(let i = 0; i < texto.length; i++){
-        switch(texto[i]){
-            case ' ':
-                encrypted += texto[i];
+    for (let i = 0; i < text.length; i++) { // loop in the string text for get a positions
+        switch (text[i]) {
+            case ' ': // verify if exist the void spaces only for not get this
+                newWord += text[i];
                 break;
             default:
-                encrypted += encryptLetter(texto[i], position(key[i]));
+                /*
+                here a call my function for encrypt or decrypt
+                this functions need 2 params
+                the first is my letter of my text
+                and second is a position of my key letter (for this i call the function position)
+                */
+                if (type === 1) { // verify what function i call encrypt or decrypt
+                    newWord += encryptLetter(text[i], position(key[i]));
+                    break;
+                } else {
+                    newWord += decryptLetter(text[i], position(key[i]));
+                    break;
+                }
         }
     }
 
-    return encrypted;
+    return newWord;
 };
 
-const position = (caracter) => {
-    for (let i = 0; i < letters.length; i+=1){
-        if (letters[i] === caracter){
+const position = (letter) => { // the function get the position in alphabet array of my letter of key
+    for (let i = 0; i < alphabet.length; i += 1) {
+        if (alphabet[i] === letter) {
             return i;
         }
     }
 };
 
-const decrypt = (textEncrypted, key) => {
-    let decrypted = '';
+/*
+here i use the some logical for cipher of Cesar
+walk in my alphabet and verify if found my letter in alphabet
+*/
 
-    for(let i = 0; i < textEncrypted.length; i+=1){
-        switch(textEncrypted[i]){
-            case ' ':
-                decrypted += textEncrypted[i];
-                break;
-            default:
-                decrypted += decryptLetter(textEncrypted[i], position(key[i]));
+const encryptLetter = (letter, key) => {
+    for (let j = 0; j < alphabet.length; j++) {
+        if (alphabet[j] === letter) {
+            /*
+            if found return my alphabet indexed by position found plus my position key, and for my array
+            be it circular do to mod my size alphabet
+            */
+            return alphabet[(j + key) % alphabet.length];
         }
     }
 
-    return decrypted;
+};
+
+const decryptLetter = (letter, key) => {
+    for (let j = 0; j < alphabet.length; j += 1) {
+        if (letter[i] === alphabet[j]) {
+            /*
+            if found return my alphabet indexed by position found any less my position key, but is number small to 0,
+            need to add the size of my alphabet and for my array
+            be it circular do to mod my size alphabet, but if my number
+            */
+            return alphabet[((j - key) + alphabet.length) % alphabet.length];
+        }
+    }
+
 };
