@@ -102,7 +102,7 @@ const encryptLetter = (letter, key) => {
 
 const decryptLetter = (letter, key) => {
     for (let j = 0; j < alphabet.length; j += 1) {
-        if (letter[i] === alphabet[j]) {
+        if (letter === alphabet[j]) {
             /*
             if found return my alphabet indexed by position found any less my position key, but is number small to 0,
             need to add the size of my alphabet and for my array
